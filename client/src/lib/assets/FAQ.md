@@ -4,11 +4,11 @@ To request funds, simply enter your <NETWORK-NAME> wallet address, fill the capt
 
 ## How much <NETWORK-TOKEN> will I receive?
 
-You will receive 2 <NETWORK-TOKEN> per request.
+You will receive 1 <NETWORK-TOKEN> per request.
 
 ## How often can I request tokens?
 
-You can request tokens every 24h!
+You can request tokens every 24h
 
 ## What is a testnet token?
 
