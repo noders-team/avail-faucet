@@ -44,12 +44,12 @@
 
   <div class="inputs-container">
     <label class="label" for="address">
-      <span class="form-label">{$testnet.networkName} Address</span>
+      <span class="form-label">{$testnet.networkHeaderName} Address</span>
     </label>
     <input
       type="text"
       bind:value={address}
-      placeholder="5rt6..."
+      placeholder="5CK8D..."
       class="input w-full text-sm form-background text-white"
       id="address"
       disabled={!!webRequest}
@@ -61,7 +61,7 @@
       <CaptchaV2 captchaKey={PUBLIC_CAPTCHA_KEY ?? ""} on:token={onToken} theme="dark" />
     </div>
     <button class="submit-btn" type="submit" data-testid="submit-button" disabled={!formValid}>
-      Get some {$testnet.currency}s
+      Get {$testnet.currency}s
     </button>
   {:else}
     <button class="btn btn-primary loading" disabled> Loading</button>

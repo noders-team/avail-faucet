@@ -124,11 +124,12 @@ export class PolkadotActions {
       await polkadotApi.isReady;
       const account = this.account;
       const transfer = polkadotApi.tx.balances.transferKeepAlive(address, amount);
-      const hashPromise = new Promise<string>((resolve) => {
+      // eslint-disable-next-line unused-imports/no-unused-vars-ts
+      const hashPromise = new Promise<string>((resolve, reject) => {
         transfer.signAndSend(account, options, ({ status, txHash }) => {
           if (status.isInBlock) {
-            // eslint-disable-next-line no-use-before-define
-            // console.log(`Transaction included at blockHash ${status.asInBlock}`);
+            // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+            console.log(`Transaction included at blockHash ${status.asInBlock}`);
             // Assuming status.asInBlock is the transaction hash
             resolve(txHash.toHex());
           }

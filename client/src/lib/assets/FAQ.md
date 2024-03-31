@@ -4,11 +4,11 @@ To request funds, simply enter your <NETWORK-NAME> wallet address, fill the capt
 
 ## How much <NETWORK-TOKEN> will I receive?
 
-You will receive 2 <NETWORK-TOKEN> per request.
+You will receive 1 <NETWORK-TOKEN> per request.
 
 ## How often can I request tokens?
 
-You can request tokens every 24h!
+You can request tokens every 24h
 
 ## What is a testnet token?
 
@@ -16,4 +16,4 @@ Testnet tokens are a test currency that allows you to test the network before go
 
 ## What if I run into any other issues, or have questions?
 
-You can [report an issue](https://github.com/availproject/polkadot-testnet-faucet/issues) in our repository or ask in our discord channel!
+You can [report an issue](https://github.com/availproject/polkadot-testnet-faucet/issues) in our repository or ask in our [discord](https://discord.gg/kbUNx6vB)!

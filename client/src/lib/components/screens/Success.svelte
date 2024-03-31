@@ -1,9 +1,12 @@
 <script lang="ts">
   import { testnet } from "$lib/utils/stores";
   import CheckCircle from "../icons/CheckCircle.svelte";
-
+  function onGoBack() {
+    window.location.reload();
+  }
   export let hash: string;
 </script>
+
 
 <div class="icon">
   <CheckCircle />
@@ -15,6 +18,8 @@
   <a href={`${$testnet.explorer}/extrinsic/${hash}`} data-testid="success-button" target="_blank" rel="noreferrer">
     <button class="submit-btn"> See transaction details</button>
   </a>
+  <button class="submit-btn" data-testid="reload" on:click={onGoBack}> Go back </button>
+
 {/if}
 
 <style lang="postcss">
