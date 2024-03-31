@@ -16,4 +16,4 @@ Testnet tokens are a test currency that allows you to test the network before go
 
 ## What if I run into any other issues, or have questions?
 
-You can [report an issue](https://github.com/availproject/polkadot-testnet-faucet/issues) in our repository or ask in our discord channel!
+You can [report an issue](https://github.com/availproject/polkadot-testnet-faucet/issues) in our repository or ask in our [discord](https://discord.gg/kbUNx6vB)!
