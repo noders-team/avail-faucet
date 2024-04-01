@@ -1,7 +1,4 @@
 import "reflect-metadata";
-import { runtimeRestarter } from "@eng-automation/js";
-
-import { logger } from "src/logger";
 
 // import { startBot } from "./bot";
 import { AppDataSource } from "./db/dataSource";
@@ -17,17 +14,18 @@ import { startServer } from "./server";
   await polkadotActions.isReady;
   const polkadotApi = await AvailApi();
   await polkadotApi.isReady;
-  void runtimeRestarter({
-    metadata: {
-      getMetadataVersion: async () => (await polkadotApi.rpc.state.getMetadata()).version.toString(),
-      onMetadataChange: () => process.exit(0),
-    },
-    runtime: {
-      getRuntimeVersionHash: async () => (await polkadotApi.rpc.state.getRuntimeVersion()).hash.toString(),
-      onRuntimeChange: () => process.exit(0),
-    },
-    log: logger.info,
-  });
+  // void runtimeRestarter({
+  //   metadata: {
+  //     getMetadataVersion: async () => (await polkadotApi.rpc.state.getMetadata()).version.toString(),
+  //     onMetadataChange: () => process.exit(0),
+  //   },
+  //   runtime: {
+  //     getRuntimeVersionHash: async () => (await polkadotApi.rpc.state.getRuntimeVersion()).hash.toString(),
+  //     onRuntimeChange: () => process.exit(0),
+  //   },
+  //   log: logger.info,
+  // });
+  // disApi(polkadotApi);
   startServer();
 })().catch((e) => {
   console.error("Start failed:", e);
