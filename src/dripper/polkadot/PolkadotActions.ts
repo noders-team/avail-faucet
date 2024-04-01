@@ -9,7 +9,7 @@ import { isDripSuccessResponse } from "../../guards";
 import { logger } from "../../logger";
 import { getNetworkData } from "../../networkData";
 import { DripResponse } from "../../types";
-import AvailApi, { disApi } from "./polkadotApi";
+import AvailApi, { disApi, getApiInstance } from "./polkadotApi";
 import { formatAmount } from "./utils";
 
 const mnemonic = config.Get("FAUCET_ACCOUNT_MNEMONIC");
@@ -69,11 +69,10 @@ export class PolkadotActions {
     }
 
     try {
-      const polkadotApi = await AvailApi();
+      const polkadotApi = await getApiInstance();
       await polkadotApi.isReady;
       const { data: balance } = await polkadotApi.query.system.account(this.account.address);
       this.#faucetBalance = balance.free.toBigInt();
-      disApi(polkadotApi);
     } catch (e) {
       logger.error(e);
     }
@@ -84,12 +83,11 @@ export class PolkadotActions {
   }
 
   public async getAccountBalance(address: string): Promise<number> {
-    const polkadotApi = await AvailApi();
+    const polkadotApi = await getApiInstance();
     await polkadotApi.isReady;
     const { data } = await polkadotApi.query.system.account(address);
 
     const { free: balanceFree } = data;
-    disApi(polkadotApi);
     return balanceFree
       .toBn()
       .div(new BN(10).pow(new BN(networkData.decimals)))
@@ -123,23 +121,11 @@ export class PolkadotActions {
       const polkadotApi = await AvailApi();
       const options = { app_id: 0, nonce: -1 };
       await polkadotApi.isReady;
-      const account = this.account;
       const transfer = polkadotApi.tx.balances.transferKeepAlive(address, amount);
       // eslint-disable-next-line unused-imports/no-unused-vars-ts
-      const hashPromise = new Promise<string>((resolve, reject) => {
-        transfer.signAndSend(account, options, ({ status, txHash }) => {
-          if (status.isInBlock) {
-            // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-            console.log(`Transaction included at blockHash ${status.asInBlock}`);
-            // Assuming status.asInBlock is the transaction hash
-            resolve(txHash.toHex());
-          }
-        });
-      });
-
-      const hash = await hashPromise;
-      result = { hash: hash };
-      console.log(result);
+      const hash = await transfer.signAndSend(this.account, options);
+      await new Promise((resolve) => setTimeout(resolve, 20000));
+      result = { hash: hash.toHex() };
       disApi(polkadotApi);
       // }
     } catch (e) {
@@ -167,13 +153,12 @@ export class PolkadotActions {
 
       // start a counter and log a timeout error if we didn't get an answer in time
       const balanceTimeout = rpcTimeout("balance");
-      const polkadotApi = await AvailApi();
+      const polkadotApi = await getApiInstance();
       await polkadotApi.isReady;
       const { data: balances } = await polkadotApi.query.system.account(this.account.address);
 
       // we got and answer reset the timeout
       clearTimeout(balanceTimeout);
-      disApi(polkadotApi);
       return balances.free.toString();
     } catch (e) {
       logger.error("⭕ An error occured when querying the balance", e);

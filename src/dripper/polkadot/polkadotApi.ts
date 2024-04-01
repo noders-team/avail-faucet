@@ -11,12 +11,12 @@ export const getApiInstance = async () => {
       return apiInstance;
     } else {
       console.log("API instance is not connected");
-      apiInstance = await initialize(process.env.WS_URL);
+      apiInstance = await initialize("wss://rpc-goldberg.sandbox.avail.tools");
       return apiInstance;
     }
   } else {
     console.log("Initializing new API instance");
-    apiInstance = await initialize(process.env.WS_URL);
+    apiInstance = await initialize("wss://rpc-goldberg.sandbox.avail.tools");
     return apiInstance;
   }
 };

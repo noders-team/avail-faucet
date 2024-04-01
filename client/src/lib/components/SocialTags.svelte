@@ -1,6 +1,6 @@
 <script lang="ts">
   import { MetaTags } from "svelte-meta-tags";
-  import socialImage from "$lib/assets/polkadot.png";
+  import socialImage from "$lib/assets/availhor.png";
 </script>
 
 <MetaTags
