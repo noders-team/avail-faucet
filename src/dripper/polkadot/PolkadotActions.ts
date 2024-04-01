@@ -9,7 +9,7 @@ import { isDripSuccessResponse } from "../../guards";
 import { logger } from "../../logger";
 import { getNetworkData } from "../../networkData";
 import { DripResponse } from "../../types";
-import AvailApi from "./polkadotApi";
+import AvailApi, { disApi } from "./polkadotApi";
 import { formatAmount } from "./utils";
 
 const mnemonic = config.Get("FAUCET_ACCOUNT_MNEMONIC");
@@ -19,7 +19,7 @@ const networkName = config.Get("NETWORK");
 const networkData = getNetworkData(networkName);
 
 const rpcTimeout = (service: string) => {
-  const timeout = 10000;
+  const timeout = 30000;
   return setTimeout(() => {
     // log an error in console and in prometheus if the timeout is reached
     logger.error(`⭕ Oops, ${service} took more than ${timeout}ms to answer`);
@@ -73,6 +73,7 @@ export class PolkadotActions {
       await polkadotApi.isReady;
       const { data: balance } = await polkadotApi.query.system.account(this.account.address);
       this.#faucetBalance = balance.free.toBigInt();
+      disApi(polkadotApi);
     } catch (e) {
       logger.error(e);
     }
@@ -88,7 +89,7 @@ export class PolkadotActions {
     const { data } = await polkadotApi.query.system.account(address);
 
     const { free: balanceFree } = data;
-
+    disApi(polkadotApi);
     return balanceFree
       .toBn()
       .div(new BN(10).pow(new BN(networkData.decimals)))
@@ -139,7 +140,7 @@ export class PolkadotActions {
       const hash = await hashPromise;
       result = { hash: hash };
       console.log(result);
-
+      disApi(polkadotApi);
       // }
     } catch (e) {
       result = { error: (e as Error).message || "An error occured when sending tokens" };
@@ -172,7 +173,7 @@ export class PolkadotActions {
 
       // we got and answer reset the timeout
       clearTimeout(balanceTimeout);
-
+      disApi(polkadotApi);
       return balances.free.toString();
     } catch (e) {
       logger.error("⭕ An error occured when querying the balance", e);

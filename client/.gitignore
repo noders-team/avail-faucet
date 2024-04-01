@@ -29,6 +29,5 @@ vite.config.ts.timestamp-*
 
 # environment files #
 #####################
-/.env
+# /.env
 !.env.example
-*.env
