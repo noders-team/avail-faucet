@@ -13,6 +13,7 @@ import AvailApi, { disApi, getApiInstance } from "./polkadotApi";
 import { formatAmount } from "./utils";
 
 const mnemonic = config.Get("FAUCET_ACCOUNT_MNEMONIC");
+const backup_mnemonic = config.Get("FAUCET_BACKUP_ACCOUNT_MNEMONIC");
 const balancePollIntervalMs = 60000; // 1 minute
 
 const networkName = config.Get("NETWORK");
@@ -28,6 +29,7 @@ const rpcTimeout = (service: string) => {
 
 export class PolkadotActions {
   account: KeyringPair | undefined;
+  backup_account: KeyringPair | undefined;
   #faucetBalance: bigint | undefined;
   isReady: Promise<void>;
 
@@ -44,6 +46,7 @@ export class PolkadotActions {
 
       waitReady().then(() => {
         this.account = keyring.addFromMnemonic(mnemonic);
+        this.backup_account = keyring.addFromMnemonic(backup_mnemonic);
 
         // We do want the following to just start and run
         // TODO: Adding a subscription would be better but the server supports on http for now
@@ -122,10 +125,24 @@ export class PolkadotActions {
       const options = { app_id: 0, nonce: -1 };
       await polkadotApi.isReady;
       const transfer = polkadotApi.tx.balances.transferKeepAlive(address, amount);
+      let res: string = "";
       // eslint-disable-next-line unused-imports/no-unused-vars-ts
-      const hash = await transfer.signAndSend(this.account, options);
+      try {
+        const hash = await transfer.signAndSend(this.account, options);
+        res = hash.toHex();
+      } catch (e) {
+        try {
+          logger.warn("⚠️First try failed, retrying with backup", e);
+          if (this.backup_account) {
+            const hash = await transfer.signAndSend(this.backup_account, options);
+            res = hash.toHex();
+          }
+        } catch {
+          logger.error("⭕ An error occured when sending tokens", e);
+        }
+      }
       await new Promise((resolve) => setTimeout(resolve, 20000));
-      result = { hash: hash.toHex() };
+      result = { hash: res };
       disApi(polkadotApi);
       // }
     } catch (e) {
