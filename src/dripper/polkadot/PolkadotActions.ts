@@ -14,7 +14,6 @@ import { formatAmount } from "./utils";
 
 const mnemonic = config.Get("FAUCET_ACCOUNT_MNEMONIC");
 const backup_mnemonic = config.Get("FAUCET_BACKUP_ACCOUNT_MNEMONIC");
-console.log(backup_mnemonic);
 const balancePollIntervalMs = 60000; // 1 minute
 
 const networkName = config.Get("NETWORK");
